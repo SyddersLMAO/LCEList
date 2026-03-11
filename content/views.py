@@ -140,7 +140,12 @@ def add_version(request, slug):
 
 @login_required
 def delete(request, slug):
-    pass
+    item = get_object_or_404(Content, slug=slug, author=request.user)
+    if request.method == 'POST':
+        item.delete()
+        messages.success(request, f'{item.title} has been deleted.')
+        return redirect('content:index')
+    return redirect('content:edit', slug=slug)
 
 
 def download(request, version_id):
