@@ -1,12 +1,12 @@
 from pathlib import Path
-from decouple import config
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = config('SECRET_KEY')
-DEBUG = config('DEBUG', default=True, cast=bool)
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost').split(',')
+SECRET_KEY = os.environ.get('SECRET_KEY')
+DEBUG = os.environ.get('DEBUG', default=True, cast=bool)
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', default='localhost').split(',')
 
 
 # Application definition
@@ -62,16 +62,16 @@ WSGI_APPLICATION = 'lcelist.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST': config('DB_HOST', default='localhost'),
-        'PORT': config('DB_PORT', default='5432'),
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST', default='localhost'),
+        'PORT': os.environ.get('DB_PORT', default='5432'),
     }
 }
 
 # Storage
-USE_R2 = config('USE_R2', default=False, cast=bool)
+USE_R2 = os.environ.get('USE_R2', default=False, cast=bool)
 
 if USE_R2:
     STORAGES = {
@@ -83,11 +83,11 @@ if USE_R2:
         },
     }
 
-    AWS_ACCESS_KEY_ID = config('R2_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = config('R2_SECRET_ACCESS_KEY')
-    AWS_STORAGE_BUCKET_NAME = config('R2_BUCKET_NAME')
-    AWS_S3_ENDPOINT_URL = config('R2_ENDPOINT_URL')
-    AWS_S3_CUSTOM_DOMAIN = config('R2_CUSTOM_DOMAIN', default=None)
+    AWS_ACCESS_KEY_ID = os.environ.get('R2_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.environ.get('R2_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = os.environ.get('R2_BUCKET_NAME')
+    AWS_S3_ENDPOINT_URL = os.environ.get('R2_ENDPOINT_URL')
+    AWS_S3_CUSTOM_DOMAIN = os.environ.get('R2_CUSTOM_DOMAIN', default=None)
     AWS_DEFAULT_ACL = 'public-read'
     AWS_S3_FILE_OVERWRITE = False
 
