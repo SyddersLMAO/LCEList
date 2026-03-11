@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}LCEList{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        .markdown h1 { font-size: 1.875rem; font-weight: 700; margin-bottom: 0.75rem; }
+        .markdown h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .markdown h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .markdown p  { margin-bottom: 0.75rem; color: #d1d5db; }
+        .markdown ul { list-style: disc; padding-left: 1.5rem; margin-bottom: 0.75rem; }
+        .markdown ol { list-style: decimal; padding-left: 1.5rem; margin-bottom: 0.75rem; }
+        .markdown li { margin-bottom: 0.25rem; color: #d1d5db; }
+        .markdown a  { color: #f9a8d4; text-decoration: underline; }
+        .markdown code { background: #1f2937; padding: 0.1rem 0.4rem; border-radius: 0.25rem; font-size: 0.875rem; }
+        .markdown pre { background: #1f2937; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin-bottom: 0.75rem; }
+        .markdown blockquote { border-left: 3px solid #f9a8d4; padding-left: 1rem; color: #9ca3af; margin-bottom: 0.75rem; }
+        .markdown img { max-width: 100%; border-radius: 0.5rem; margin-bottom: 0.75rem; }
+    </style>
+</head>
+<body class="bg-gray-950 text-gray-100 min-h-screen flex flex-col">
+    
+    <nav class="bg-gray-900 px-6 py-4">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <a href="{% url 'content:index' %}" class="text-3xl font-bold text-pink-300">LCEList</a>
+            <div class="flex items-center gap-6 text-sm">
+                <a href="{% url 'content:browse' %}" class="hover:text-pink-300">Browse</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'content:upload' %}" class="hover:text-pink-300">Upload</a>
+                    <a href="{% url 'users:profile' user.username %}" class="flex gap-2 items-center hover:text-pink-300">
+                        {{ user.username }}<img src="{{ user.avatar.url }}" class="w-8 h-8 rounded-full object-cover"></a>
+                {% else %}
+                    <a href="{% url 'users:login' %}" class="hover:text-pink-300">Login</a>
+                    <a href="{% url 'users:register' %}" class="bg-pink-300 text-gray-900 px-4 py-1.5 rounded font-semibold hover:bg-pink-200">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    {% if messages %}
+        <div class="max-w-6xl mx-auto w-full px-6 mt-4">
+            {% for message in messages %}
+                <div class="bg-pink-300 text-gray-900 px-4 py-3 rounded mb-2 font-medium">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <main class="flex-1 max-w-6xl mx-auto w-full px-6 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-gray-900 border-t border-gray-800 text-center text-gray-500 text-sm py-6">
+        LCEList — a community site for Minecraft Legacy Console Edition
+        <div class="">
+            Have an issue? ping @SyddersLMAO on the MinecraftConsoles discord until i make a proper bug tracker lol
+        </div>
+        <br>
+        Due to only one person running this content is not checked thoroughly. anything you download is at your own risk
+    </footer>
+</body>
+</html>

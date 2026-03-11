@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block title %}Browse — LCEList{% endblock %}
+
+{% block content %}
+
+<h1 class="text-2xl font-bold mb-4">Browse</h1>
+
+<div class="flex gap-2 mb-8 border-b border-gray-800 pb-4 flex-wrap">
+    {% for cat in categories %}
+        <a href="?category={{ cat.slug }}"
+            class="px-4 py-2 rounded text-sm font-semibold {% if current.category == cat.slug %}bg-pink-300 text-gray-900{% else %}bg-gray-800 text-gray-300 hover:bg-gray-700{% endif %}">
+            {{ cat.name }}
+        </a>
+    {% endfor %}
+</div>
+
+<div class="flex gap-8">
+    <aside class="w-56 flex-shrink-0">
+        <div class="mb-6">
+            <input type="text" id="search-input" value="{{ current.q }}" placeholder="Search..."
+                class="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-pink-300">
+        </div>
+
+        <div class="mb-6">
+            <h3 class="text-sm font-semibold text-gray-400 uppercase mb-2">Sort</h3>
+            <a href="?category={{ current.category }}&sort=downloads&q={{ current.q }}"
+                class="block text-sm py-1 {% if current.sort == 'downloads' %}text-pink-300{% else %}text-gray-400 hover:text-gray-100{% endif %}">Most Downloaded</a>
+            <a href="?category={{ current.category }}&sort=newest&q={{ current.q }}"
+                class="block text-sm py-1 {% if current.sort == 'newest' %}text-pink-300{% else %}text-gray-400 hover:text-gray-100{% endif %}">Newest</a>
+            <a href="?category={{ current.category }}&sort=title&q={{ current.q }}"
+                class="block text-sm py-1 {% if current.sort == 'title' %}text-pink-300{% else %}text-gray-400 hover:text-gray-100{% endif %}">A–Z</a>
+        </div>
+
+        {% if active_category.has_theme and themes %}
+            <div class="mb-6">
+                <h3 class="text-sm font-semibold text-gray-400 uppercase mb-2">Theme</h3>
+                <a href="?category={{ current.category }}&q={{ current.q }}"
+                    class="block text-sm py-1 {% if not current.theme %}text-pink-300{% else %}text-gray-400 hover:text-gray-100{% endif %}">All</a>
+                {% for theme in themes %}
+                    <a href="?category={{ current.category }}&theme={{ theme.slug }}&q={{ current.q }}"
+                        class="block text-sm py-1 {% if current.theme == theme.slug %}text-pink-300{% else %}text-gray-400 hover:text-gray-100{% endif %}">
+                        {{ theme.name }}
+                    </a>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if active_category.has_loader and loaders %}
+            <div class="">
+                <h3 class="text-sm font-semibold text-gray-400 uppercase mb-2">Loader</h3>
+                <a href="?category={{ current.category }}&q={{ current.q }}"
+                    class="block text-sm py-1 {% if not current.loader %}text-pink-300{% else %}text-gray-400 hover:text-gray-100{% endif %}">All</a>
+                {% for loader in loaders %}
+                    <a href="?category={{ current.category }}&loader={{ loader.slug }}&q={{ current.q }}"
+                        class="block text-sm py-1 {% if current.loader == loader.slug %}text-pink-300{% else %}text-gray-400 hover:text-gray-100{% endif %}">
+                        {{ loader.name }}
+                    </a>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </aside>
+
+    <div class="flex-1">
+        {% if items %}
+            <div class="grid grid-cols-1 gap-6">
+                {% for item in items %}
+                    {% include 'includes/content_card.html' with item=item %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-gray-500">No results found.</p>
+        {% endif %}
+    </div>
+
+</div>
+
+<script>
+    document.getElementById('search-input').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            const params = new URLSearchParams(window.location.search);
+            params.set('q', this.value);
+            window.location.search = params.toString();
+        }
+    });
+</script>
+
+{% endblock %}

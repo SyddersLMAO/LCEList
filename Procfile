@@ -1,0 +1,1 @@
+web: gunicorn lcelist.wsgi --bind 0.0.0.0:$PORT

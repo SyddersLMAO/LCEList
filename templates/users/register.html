@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Register — LCEList{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center min-h-[70vh]">
+    <div class="w-full max-w-md">
+        <form method="post" class="bg-gray-900 border border-gray-800 rounded-lg p-6">
+            <h1 class="text-2xl font-bold mb-6">Register</h1>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="bg-red-900 border border-red-700 text-red-300 px-4 py-3 rounded mb-4 text-sm">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% for field in form %}
+                <div class="mb-4">
+                    <label class="block text-sm text-gray-400 mb-1">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}<p class="text-red-400 text-xs mt-1">{{ field.errors.0 }}</p>{% endif %}
+                </div>
+            {% endfor %}
+            <button type="submit" class="w-full bg-pink-300 text-gray-900 py-2 mt-4 rounded font-bold hover:bg-pink-200">Login</button>
+        </form>
+        <p class="text-center text-gray-500 text-sm mt-4">Already have an account? <a href="{% url 'users:login' %}" class="text-pink-300 hover:underline">Login</a></p>
+    </div>
+</div>
+{% endblock %}

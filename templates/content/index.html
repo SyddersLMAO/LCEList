@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}LCEList — Home{% endblock %}
+
+
+{% block content %}
+
+<div class="text-center py-20 mb-12">
+    <h1 class="text-[75px] font-bold text-pink-300 mb-4">LCEList</h1>
+    <p class="text-gray-400 text-lg mb-8">Your one stop shop for Minecraft Legacy Console Edition content.</p>
+    <a href="{% url 'content:browse' %}" class="bg-pink-300 text-gray-900 px-6 py-3 rounded font-bold hover:bg-pink-200">Browse All Content</a>
+</div>
+
+{% if featured %}
+<section class="mb-12">
+    <h2 class="text-xl font-bold mb-4 text-gray-200">Featured</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for item in featured %}
+            {% include 'includes/content_card_small.html' with item=item %}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<section>
+    <h2 class="text-xl font-bold mb-4 text-gray-200">Recently Added</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for item in recent %}
+            {% include 'includes/content_card_small.html' with item=item %}
+        {% endfor %}
+    </div>
+</section>
+
+{% endblock %}

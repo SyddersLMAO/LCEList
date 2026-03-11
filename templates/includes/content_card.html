@@ -1,0 +1,33 @@
+<a href="{% url 'content:detail' item.slug %}" class="bg-gray-900 rounded-lg overflow-hidden border border-gray-800 hover:border-pink-300 transition flex">
+    <div class="w-36 h-36 flex-shrink-0">
+        {% if item.thumbnail %}
+            <img src="{{ item.thumbnail.url }}" alt="{{ item.title }}" class="w-full h-full object-cover">
+        {% else %}
+            <div class="w-full h-full bg-gray-800 flex items-center justify-center text-gray-600 text-xs">No image</div>
+        {% endif %}
+    </div>
+
+    <div class="flex flex-1 p-4 justify-between gap-4">
+        <div class="flex flex-col justify-between flex-1 min-w-0">
+            <div>
+                <h3 class="font-semibold text-gray-100">
+                    {{ item.title }} <span class="text-gray-500 font-normal text-sm">by {{ item.author }}</span>
+                </h3>
+                <p class="text-gray-400 text-sm mt-1 line-clamp-2">{{ item.tagline }}</p>
+            </div>
+            <div class="flex gap-2 mt-2 flex-wrap">
+                {% for loader in item.loaders.all %}
+                    <span class="text-xs bg-gray-800 text-gray-400 px-2 py-0.5 rounded">{{ loader.name }}</span>
+                {% endfor %}
+                {% if item.theme %}
+                    <span class="text-xs bg-gray-800 text-gray-400 px-2 py-0.5 rounded">{{ item.theme.name }}</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="flex flex-col items-end justify-between flex-shrink-0 text-xs text-gray-500">
+            <span>{{ item.downloads }} downloads</span>
+            <span>{{ item.updated_at|timesince }} ago</span>
+        </div>
+    </div>
+</a>

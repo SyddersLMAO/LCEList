@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}{{ profile_user.username }} — LCEList{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-2">{{ profile_user.username }}</h1>
+
+<h2 class="text-xl font-bold mb-4">Content</h2>
+{% if uploads %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for item in uploads %}
+            {% include 'includes/content_card_small.html' with item=item %}
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="text-gray-500">No uploads yet.</p>
+{% endif %}
+{% endblock %}
