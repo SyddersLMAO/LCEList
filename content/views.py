@@ -139,6 +139,16 @@ def add_version(request, slug):
     return redirect(request.META.get('HTTP_REFERER', 'content:index'))
 
 @login_required
+def edit_version(request, version_id):
+    version = get_object_or_404(ContentVersion, id=version_id, content__author=request.user)
+    if request.method == 'POST':
+        form = ContentVersionForm(request.POST, request.FILES, instance=version)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Version {version.version_number} updated.')
+    return redirect('content:edit', slug=version.content.slug)
+
+@login_required
 def delete(request, slug):
     item = get_object_or_404(Content, slug=slug, author=request.user)
     if request.method == 'POST':
@@ -146,6 +156,16 @@ def delete(request, slug):
         messages.success(request, f'{item.title} has been deleted.')
         return redirect('content:index')
     return redirect('content:edit', slug=slug)
+
+@login_required
+def delete_version(request, version_id):
+    version = get_object_or_404(ContentVersion, id=version_id, content__author=request.user)
+    if request.method == 'POST':
+        slug = version.content.slug
+        version.delete()
+        messages.success(request, f'Version {version.version_number} deleted.')
+        return redirect('content:edit', slug=slug)
+    return redirect('content:edit', slug=version.content.slug)
 
 
 def download(request, version_id):

@@ -1,0 +1,62 @@
+<div id="edit-version-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
+    <div class="bg-gray-900 border border-gray-800 rounded-lg p-6 w-full max-w-md mx-4">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold">Add Version</h2>
+            <button onclick="closeEditVersionModal()" class="text-gray-500 hover:text-gray-100 text-xl">✕</button>
+        </div>
+        <form method="post" action="{% url 'content:add_version' item.slug %}" enctype="multipart/form-data" id="edit-version-form">
+            {% csrf_token %}
+                <div class="mb-4">
+                    <label class="block text-sm text-gray-400 mb-1">{{ version_form.version_number.label }}</label>
+                    {{ version_form.version_number }}
+                    {% if version_form.version_number.errors %}
+                        <p class="text-red-400 text-xs mt-1">{{ version_form.version_number.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm text-gray-400 mb-1">{{ version_form.loader.label }}</label>
+                    {{ version_form.loader }}
+                    {% if version_form.loader.errors %}
+                        <p class="text-red-400 text-xs mt-1">{{ version_form.loader.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm text-gray-400 mb-1">{{ version_form.loader_version.label }}</label>
+                    {{ version_form.loader_version }}
+                    {% if version_form.loader_version.errors %}
+                        <p class="text-red-400 text-xs mt-1">{{ version_form.loader_version.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm text-gray-400 mb-1">{{ version_form.changelog.label }}</label>
+                    {{ version_form.changelog }}
+                    {% if version_form.changelog.errors %}
+                        <p class="text-red-400 text-xs mt-1">{{ version_form.changelog.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            <div class="flex justify-end gap-3">
+                <button type="button" onclick="closeEditVersionModal()" class="text-gray-400 hover:text-gray-100 text-sm px-4 py-2">Cancel</button>
+                <button type="submit" class="bg-pink-300 text-gray-900 px-6 py-2 rounded font-bold hover:bg-pink-200 text-sm">Confirm</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openEditVersionModal(versionId, versionNumber, loaderId, loaderVersion, changelog, actionUrl) {
+        const form = document.getElementById('edit-version-form');
+        form.classList.remove('hidden');
+        form.action = actionUrl;
+        form.querySelector('[name="version_number"]').value = versionNumber;
+        form.querySelector('[name="loader"]').value = loaderId;
+        form.querySelector('[name="loader_version"]').value = loaderVersion;
+        form.querySelector('[name="changelog"]').value = changelog;
+        document.getElementById('edit-version-modal').classList.remove('hidden');
+    }
+    function closeEditVersionModal() {
+        document.getElementById('edit-version-modal').classList.add('hidden');
+    }
+    document.getElementById('edit-version-modal').addEventListener('click', function(e) {
+        if (e.target === this) closeEditVersionModal();
+    });
+</script>
