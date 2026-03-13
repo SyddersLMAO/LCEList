@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login
 from django.contrib import messages
 from django.db.models import Sum
 from .forms import StyledRegisterForm
@@ -13,13 +14,12 @@ def register(request):
     if request.method == 'POST':
         form = StyledRegisterForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Account created — you can now log in.')
-            return redirect('users:login')
+            user = form.save()
+            login(request, user)
+            return redirect('content:index')
     else:
         form = StyledRegisterForm()
     return render(request, 'users/register.html', {'form': form})
-
 
 
 def profile(request, username):
