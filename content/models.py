@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.utils.text import slugify
 from taggit.managers import TaggableManager
-from .validators import validate_image_size, validate_content_file_size
+from .validators import validate_image_size, validate_content_file_size, validate_zip_file
 from .utils import crop_to_square
 
 class Loader(models.Model):
@@ -125,7 +125,7 @@ def version_file_path(instance, filename):
 class ContentVersion(models.Model):
     content = models.ForeignKey(Content, on_delete=models.CASCADE, related_name='versions')
     version_number = models.CharField(max_length=50)
-    file = models.FileField(upload_to=version_file_path, validators=[validate_content_file_size])
+    file = models.FileField(upload_to=version_file_path, validators=[validate_content_file_size, validate_zip_file])
     file_size = models.PositiveBigIntegerField(default=0)
     changelog = models.TextField(blank=True)
     game_version = models.CharField(max_length=50, blank=True)

@@ -3,9 +3,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.contrib import messages
 from django.db.models import Sum
+from django.core.exceptions import ValidationError
 from .forms import StyledRegisterForm
 from .models import User
 from content.models import Content
+from content.validators import validate_image_type
 
 
 def register(request):
@@ -39,7 +41,13 @@ def edit_profile(request):
         user.username = request.POST.get('username', '')
         user.bio = request.POST.get('bio', '')
         if 'avatar' in request.FILES:
-            user.avatar = request.FILES['avatar']
+            avatar = request.FILES['avatar']
+            try:
+                validate_image_type(avatar)
+            except ValidationError as e:
+                messages.error(request, e.message)
+                return render(request, 'users/edit_profile.html', {'profile_user': user})
+            user.avatar = avatar
         user.save()
         messages.success(request, 'Profile updated.')
         return redirect('users:profile', username=user.username)

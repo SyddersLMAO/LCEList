@@ -3,10 +3,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import Http404, JsonResponse
 from django.db.models import Q
+from django.core.exceptions import ValidationError
 import json
 from .forms import ContentForm, ContentEditForm, ContentVersionForm
 from .models import Content, ContentVersion, Loader, Category, Theme
-from .validators import validate_upload_size
+from .validators import validate_upload_size, validate_image_type
 
 def index(request):
     featured = Content.objects.filter(is_approved=True, is_featured=True)[:6]
@@ -113,6 +114,12 @@ def edit(request, slug):
     if request.method == 'POST':
         form = ContentEditForm(request.POST, request.FILES, instance=item)
         if form.is_valid():
+            if 'thumbnail' in request.FILES:
+                try:
+                    validate_image_type(request.FILES['thumbnail'])
+                except ValidationError as e:
+                    messages.error(request, e.message)
+                    return render(request, 'content/edit.html', {'form': form, 'item': item, 'loaders': Loader.objects.all(), 'version_form': ContentVersionForm()})
             form.save()
             messages.success(request, 'Updated successfully.')
             return redirect('content:detail', slug=item.slug)
@@ -128,7 +135,6 @@ def add_version(request, slug):
         if not validate_upload_size(request, max_mb=500):
             messages.error(request, 'File is too large. Maximum size is 500MB.')
             return redirect(request.META.get('HTTP_REFERER', 'content:index'))
-        
         form = ContentVersionForm(request.POST, request.FILES)
         if form.is_valid():
             version = form.save(commit=False)
@@ -136,6 +142,9 @@ def add_version(request, slug):
             version.file_size = version.file.size
             version.save()
             messages.success(request, f'Version {version.version_number} added.')
+        else:
+            for error in form.errors.values():
+                messages.error(request, error[0])
     return redirect(request.META.get('HTTP_REFERER', 'content:index'))
 
 @login_required
