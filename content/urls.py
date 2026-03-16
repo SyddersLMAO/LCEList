@@ -16,4 +16,5 @@ urlpatterns = [
     path('version/<int:version_id>/editver/', views.edit_version, name='edit_version'),
 
     path('download/<int:version_id>/', views.download, name='download'),
+    path('item/<slug:slug>/report/', views.report, name='report'),
 ]

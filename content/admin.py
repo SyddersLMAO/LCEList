@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Loader, Category, Content, ContentVersion, Screenshot, Theme
+from .models import Loader, Category, Content, ContentVersion, Screenshot, Theme, Report
 
 class ContentVersionInline(admin.TabularInline):
     model = ContentVersion
@@ -34,3 +34,9 @@ class CategoryAdmin(admin.ModelAdmin):
 class ThemeAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug']
     prepopulated_fields = {'slug': ('name',)}
+
+@admin.register(Report)
+class ReportAdmin(admin.ModelAdmin):
+    list_display = ['content', 'reporter', 'reason', 'created_at', 'resolved']
+    list_editable = ['resolved']
+    list_filter = ['reason', 'resolved']

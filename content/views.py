@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.core.exceptions import ValidationError
 import json
 from .forms import ContentForm, ContentEditForm, ContentVersionForm
-from .models import Content, ContentVersion, Loader, Category, Theme
+from .models import Content, ContentVersion, Loader, Category, Theme, Report
 from .validators import validate_upload_size, validate_image_type
 
 def index(request):
@@ -181,3 +181,17 @@ def download(request, version_id):
     version = get_object_or_404(ContentVersion, pk=version_id, content__is_approved=True)
     version.content.increment_downloads()
     return redirect(version.file.url)
+
+@login_required
+def report(request, slug):
+    item = get_object_or_404(Content, slug=slug, is_approved=True)
+    if request.method == 'POST':
+        reason = request.POST.get('reason')
+        details = request.POST.get('details', '')
+        if Report.objects.filter(content=item, reporter=request.user).exists():
+            messages.error(request, 'You have already reported this.')
+        else:
+            Report.objects.create(content=item, reporter=request.user, reason=reason, details=details)
+            messages.success(request, 'Report submitted. Thank you.')
+        return redirect('content:detail', slug=slug)
+    return redirect('content:detail', slug=slug)

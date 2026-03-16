@@ -4,6 +4,7 @@ from django.utils.text import slugify
 from taggit.managers import TaggableManager
 from .validators import validate_image_size, validate_content_file_size, validate_zip_file
 from .utils import crop_to_square
+from users.models import User
 
 class Loader(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -152,3 +153,21 @@ class Screenshot(models.Model):
 
     class Meta:
         ordering = ['order']
+
+class Report(models.Model):
+    REASONS = [
+        ('spam', 'Spam'),
+        ('malware', 'Malware or harmful file'),
+        ('inappropriate', 'Inappropriate content'),
+        ('stolen', 'Stolen content'),
+        ('other', 'Other'),
+    ]
+    content = models.ForeignKey(Content, on_delete=models.CASCADE, related_name='reports')
+    reporter = models.ForeignKey(User, on_delete=models.CASCADE)
+    reason = models.CharField(max_length=50, choices=REASONS)
+    details = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    resolved = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('content', 'reporter')
