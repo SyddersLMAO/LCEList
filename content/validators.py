@@ -36,4 +36,4 @@ def validate_image_size(file):
     validate_file_size(5)(file)
 
 def validate_content_file_size(file):
-    validate_file_size(500)(file)
+    validate_file_size(25)(file)
