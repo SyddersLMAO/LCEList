@@ -17,7 +17,7 @@ class ContentFilter(django_filters.FilterSet):
         model = Content
         fields = ['category', 'theme', 'loader']
 
-class ContentViewSet(viewsets.ModelViewSet):
+class ContentViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Content.objects.filter(is_approved=True)
     serializer_class = ContentSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
