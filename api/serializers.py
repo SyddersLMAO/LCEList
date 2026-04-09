@@ -26,8 +26,7 @@ class ContentSerializer(serializers.ModelSerializer):
         model = Content
         fields = [
             'title', 'slug', 'tagline', 'description', 'thumbnail',
-            'author', 'downloads', 'category', 'theme', 'loaders',
-            'game_version', 'tags', 'created_at'
+            'author', 'downloads', 'category', 'theme', 'loaders', 'tags', 'created_at'
         ]
     
     def get_tags(self, obj):

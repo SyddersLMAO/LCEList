@@ -1,5 +1,6 @@
 asarPy==1.0.1
 asgiref==3.11.1
+attrs==26.1.0
 bleach==6.3.0
 boto3==1.42.64
 botocore==1.42.64
@@ -10,8 +11,12 @@ django-storages==1.14.6
 django-taggit==6.1.0
 djangorestframework==3.17.1
 dotenv==0.9.9
+drf-spectacular==0.29.0
 gunicorn==25.1.0
+inflection==0.5.1
 jmespath==1.1.0
+jsonschema==4.26.0
+jsonschema-specifications==2025.9.1
 Markdown==3.10.2
 packaging==26.0
 pillow==12.1.1
@@ -19,10 +24,14 @@ psycopg2-binary==2.9.11
 python-dateutil==2.9.0.post0
 python-decouple==3.8
 python-dotenv==1.2.2
+PyYAML==6.0.3
+referencing==0.37.0
+rpds-py==0.30.0
 s3transfer==0.16.0
 six==1.17.0
 sqlparse==0.5.5
 tinycss2==1.4.0
+uritemplate==4.2.0
 urllib3==2.6.3
 webencodings==0.5.1
 whitenoise==6.12.0
