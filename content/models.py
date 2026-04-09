@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.utils.text import slugify
+from django.core.exceptions import ValidationError
 from taggit.managers import TaggableManager
 from .validators import validate_image_size, validate_content_file_size, validate_zip_file
 from .utils import crop_to_square
@@ -82,7 +83,6 @@ class Content(models.Model):
         blank=True,
         related_name='content',
     )
-    game_version = models.CharField(max_length=50, blank=True)
     tags = TaggableManager(blank=True)
 
     issues_link = models.CharField(blank=True)
@@ -98,6 +98,17 @@ class Content(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def clean(self):
+        if not self.category:
+            return
+        
+        if not self.category.has_theme and self.theme:
+            raise ValidationError({'theme': 'This category does not support themes.'})
+        
+        if self.pk and not self.category.has_loader and self.loaders.exists():
+            raise ValidationError({'loaders': 'This category does not support loaders.'})
+
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -136,6 +147,20 @@ class ContentVersion(models.Model):
 
     def __str__(self):
         return f'{self.content.title} - v{self.version_number}'
+    
+    def clean(self):
+        category = self.content.category if self.content_id else None
+        if not category:
+            return
+
+        if not category.has_loader:
+            if self.loader:
+                raise ValidationError({'loader': 'This category does not support loaders.'})
+            if self.loader_version:
+                raise ValidationError({'loader_version': 'This category does not support loader versions.'})
+
+        if not category.has_game_version and self.game_version:
+            raise ValidationError({'game_version': 'This category does not support game versions.'})
 
     def file_size_mb(self):
         return round(self.file_size / (1024 * 1024), 2)

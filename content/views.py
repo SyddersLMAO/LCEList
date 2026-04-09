@@ -119,14 +119,14 @@ def edit(request, slug):
                     validate_image_type(request.FILES['thumbnail'])
                 except ValidationError as e:
                     messages.error(request, e.message)
-                    return render(request, 'content/edit.html', {'form': form, 'item': item, 'loaders': Loader.objects.all(), 'version_form': ContentVersionForm()})
+                    return render(request, 'content/edit.html', {'form': form, 'item': item, 'loaders': Loader.objects.all(), 'version_form': ContentVersionForm(content=item)})
             form.save()
             messages.success(request, 'Updated successfully.')
             return redirect('content:detail', slug=item.slug)
     else:
         form = ContentEditForm(instance=item)
 
-    return render(request, 'content/edit.html', {'form': form, 'item': item, 'loaders': Loader.objects.all(), 'version_form': ContentVersionForm(),})
+    return render(request, 'content/edit.html', {'form': form, 'item': item, 'loaders': Loader.objects.all(), 'version_form': ContentVersionForm(content=item),})
 
 @login_required
 def add_version(request, slug):
@@ -135,7 +135,7 @@ def add_version(request, slug):
         if not validate_upload_size(request, max_mb=500):
             messages.error(request, 'File is too large. Maximum size is 500MB.')
             return redirect(request.META.get('HTTP_REFERER', 'content:index'))
-        form = ContentVersionForm(request.POST, request.FILES)
+        form = ContentVersionForm(request.POST, request.FILES, content=item)
         if form.is_valid():
             version = form.save(commit=False)
             version.content = item

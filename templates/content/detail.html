@@ -46,19 +46,24 @@
 <div class="flex gap-8 mt-6">
 
     <div class="flex-1 min-w-0">
-        <div class="bg-gray-900 border border-gray-800 rounded-lg p-4 mb-6">
-            <div class="markdown">
-                {{ item.description|markdownify }}
+        {% if version.description %}
+            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4 mb-6">
+                <div class="markdown">
+                    {{ item.description|markdownify }}
+                </div>
             </div>
-        </div>
 
-        <h2 class="text-xl font-bold mb-4">Versions</h2>
+            <h2 class="text-xl font-bold mb-4">Versions</h2>
+        {% endif %}
         {% for version in versions %}
             <div class="bg-gray-900 border border-gray-800 rounded-lg p-4 mb-3 flex items-center justify-between">
                 <div>
                     <span class="font-semibold text-xl">{{ version.version_number }}</span>
-                    <p class="text-sm text-gray-300">Mod Loader: {{ version.loader }}</p>
-                    <p class="text-sm text-gray-300 mb-6">Loader Version: {{ version.loader_version }}</p>
+                    {% if version.loader %}
+                        <p class="text-sm text-gray-300">Mod Loader: {{ version.loader }}</p>
+                        <p class="text-sm text-gray-300 mb-6">Loader Version: {{ version.loader_version }}</p>
+                    {% endif %}
+                    <br><br>
 
                     <span class="font-semibold">Changelog:</span>
                     {% if version.changelog %}<p class="text-gray-400 text-sm mt-1">{{ version.changelog }}</p>{% endif %}
@@ -72,53 +77,59 @@
     </div>
 
     <aside class="w-56 flex-shrink-0">
-        <div class="bg-gray-900 border border-gray-800 rounded-lg p-4 mb-4">
-            <h3 class="font-semibold mb-3 text-gray-300">Compatibility</h3>
-            {% with latest=versions.0 %}
-                {% if latest %}
-                    {% if latest.loader %}
-                        <div class="text-sm text-gray-500 mb-2">
-                            Loader: <span class="text-gray-300">{{ latest.loader.name }}</span>
-                        </div>
+        {% if latest %}
+        {% if latest.loader or latest.loader_version or latest.game_version %}
+            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4 mb-4">
+                <h3 class="font-semibold mb-3 text-gray-300">Compatibility</h3>
+                {% with latest=versions.0 %}
+                    {% if latest %}
+                        {% if latest.loader %}
+                            <div class="text-sm text-gray-500 mb-2">
+                                Loader: <span class="text-gray-300">{{ latest.loader.name }}</span>
+                            </div>
+                        {% endif %}
+                        {% if latest.loader_version %}
+                            <div class="text-sm text-gray-500 mb-2">
+                                Loader Version: <span class="text-gray-300">{{ latest.loader_version }}</span>
+                            </div>
+                        {% endif %}
+                        {% if latest.game_version %}
+                            <div class="text-sm text-gray-500 mb-2">
+                                Game Version: <span class="text-gray-300">{{ latest.game_version }}</span>
+                            </div>
+                        {% endif %}
                     {% endif %}
-                    {% if latest.loader_version %}
-                        <div class="text-sm text-gray-500 mb-2">
-                            Loader Version: <span class="text-gray-300">{{ latest.loader_version }}</span>
-                        </div>
-                    {% endif %}
-                    {% if latest.game_version %}
-                        <div class="text-sm text-gray-500 mb-2">
-                            Game Version: <span class="text-gray-300">{{ latest.game_version }}</span>
-                        </div>
-                    {% endif %}
+                {% endwith %}
+            </div>
+        {% endif %}
+        {% endif %}
+
+        {% if item.issues_link or item.source_link or item.wiki_link or item.discord_link %}
+            <div class="bg-gray-900 border border-gray-800 rounded-lg p-4 mb-4">
+                <h3 class="font-semibold mb-3 text-gray-300">Links</h3>
+
+                {% if item.issues_link %}
+                    <div class="text-sm text-gray-300 mb-2 font-bold hover:text-gray-400">
+                        <a href="{{ item.issues_link }}" >Issue tracker</a>
+                    </div>
                 {% endif %}
-            {% endwith %}
-        </div>
-
-        <div class="bg-gray-900 border border-gray-800 rounded-lg p-4 mb-4">
-            <h3 class="font-semibold mb-3 text-gray-300">Links</h3>
-
-            {% if item.issues_link %}
-                <div class="text-sm text-gray-300 mb-2 font-bold hover:text-gray-400">
-                    <a href="{{ item.issues_link }}" >Issue tracker</a>
-                </div>
-            {% endif %}
-            {% if item.source_link %}
-                <div class="text-sm text-gray-300 mb-2 font-bold hover:text-gray-400">
-                    <a href="{{ item.source_link }}" >Source code</a>
-                </div>
-            {% endif %}
-            {% if item.wiki_link %}
-                <div class="text-sm text-gray-300 mb-2 font-bold hover:text-gray-400">
-                    <a href="{{ item.wiki_link }}" >Wiki</a>
-                </div>
-            {% endif %}
-            {% if item.discord_link %}
-                <div class="text-sm text-gray-300 mb-2 font-bold hover:text-gray-400">
-                    <a href="{{ item.discord_link }}" >Discord</a>
-                </div>
-            {% endif %}
-        </div>
+                {% if item.source_link %}
+                    <div class="text-sm text-gray-300 mb-2 font-bold hover:text-gray-400">
+                        <a href="{{ item.source_link }}" >Source code</a>
+                    </div>
+                {% endif %}
+                {% if item.wiki_link %}
+                    <div class="text-sm text-gray-300 mb-2 font-bold hover:text-gray-400">
+                        <a href="{{ item.wiki_link }}" >Wiki</a>
+                    </div>
+                {% endif %}
+                {% if item.discord_link %}
+                    <div class="text-sm text-gray-300 mb-2 font-bold hover:text-gray-400">
+                        <a href="{{ item.discord_link }}" >Discord</a>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
 
         <div class="bg-gray-900 border border-gray-800 rounded-lg p-4 mb-4">
             <h3 class="font-semibold mb-3 text-gray-300">Author</h3>
