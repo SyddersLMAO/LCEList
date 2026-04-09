@@ -63,6 +63,10 @@
                     {{ form.tagline }}
                 </div>
                 <div class="mb-4">
+                    <label class="block text-sm text-gray-400 mb-1">AI Used</label>
+                    {{ form.ai_used }}
+                </div>
+                <div class="mb-4">
                     <label class="block text-sm text-gray-400 mb-1">Thumbnail</label>
                     <div class="flex items-center gap-4">
                         <img src="{{ item.thumbnail.url }}" class="h-32 w-32 rounded object-cover flex-shrink-0" id="thumbnail-preview">

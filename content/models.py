@@ -93,6 +93,13 @@ class Content(models.Model):
     is_approved = models.BooleanField(default=True)
     is_featured = models.BooleanField(default=False)
 
+    AI_CHOICES = [
+        ('none', 'No AI used'),
+        ('assisted', 'AI helped with this'),
+        ('generated', 'I vibecoded this'),
+    ]
+    ai_used = models.CharField(max_length=20, choices=AI_CHOICES, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

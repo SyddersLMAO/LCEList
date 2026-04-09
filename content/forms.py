@@ -12,13 +12,14 @@ class ContentForm(forms.ModelForm):
 
     class Meta:
         model = Content
-        fields = ['category', 'title', 'slug', 'tagline']
+        fields = ['category', 'title', 'slug', 'tagline', 'ai_used']
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Enter name'}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['ai_used'].label = 'AI Used'
         for field in self.fields.values():
             if not isinstance(field.widget, forms.CheckboxSelectMultiple):
                 field.widget.attrs['class'] = input_classes
@@ -32,7 +33,7 @@ class ContentEditForm(forms.ModelForm):
 
     class Meta:
         model = Content
-        fields = ['category', 'title', 'slug', 'tagline', 'description', 'thumbnail', 'loaders', 'theme', 'tags', 'issues_link', 'source_link', 'wiki_link', 'discord_link']
+        fields = ['category', 'title', 'slug', 'tagline', 'ai_used', 'description', 'thumbnail', 'loaders', 'theme', 'tags', 'issues_link', 'source_link', 'wiki_link', 'discord_link']
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Enter name'}),
             'description': forms.Textarea(attrs={'rows': 20}),
