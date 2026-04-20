@@ -10,6 +10,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', default='localhost').split(',')
 CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', 'http://localhost').split(',')
+GOOGLE_ANALYTICS_ID = os.environ.get('GOOGLE_ANALYTICS_ID', '')
 
 # Application definition
 INSTALLED_APPS = [
@@ -60,6 +61,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
 
                 'content.context_processors.site_messages',
+                'lcelist.context_processors.analytics',
             ],
         },
     },

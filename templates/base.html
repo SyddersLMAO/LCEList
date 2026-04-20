@@ -1,10 +1,14 @@
+{% load static %}
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="cc--darkmode">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}LCEList{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.0.1/dist/cookieconsent.css">
 
     <meta property="og:site_name" content="LCEList">
     <meta property="og:type" content="website">
@@ -103,6 +107,9 @@
         <br>
         <p>Due to only one person running this content is not checked thoroughly. anything you download is at your own risk</p>
     </footer>
+
+    <script defer src="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.0.1/dist/cookieconsent.umd.js"></script>
+    <script defer src="{% static 'js/consent-config.js' %}"></script>
 </body>
 </html>
 
@@ -114,4 +121,25 @@
             });
         });
     });
+</script>
+
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+
+  gtag('consent', 'default', {
+    'analytics_storage': 'denied',
+    'ad_storage': 'denied',
+    'wait_for_update': 500
+  });
+</script>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ GOOGLE_ANALYTICS_ID }}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', '{{ GOOGLE_ANALYTICS_ID }}');
 </script>
